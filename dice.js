@@ -11,6 +11,7 @@ player2GlobalScore = document.querySelector("#score-" + activePlayer[1]);
 player1Panel = document.querySelector(".player-0-panel");
 player2Panel = document.querySelector(".player-1-panel");
 diceRoll = document.querySelector(".btn-roll");
+var player1Active;
 
 function gameInit(){
 	diceImg.style.display = "none";
@@ -18,22 +19,32 @@ function gameInit(){
 	player2CurrentScore.innerHTML = 0;
 	player1GlobalScore.innerHTML = 0;
 	player2GlobalScore.innerHTML = 0;
+	player1Active = true;
 }
 
 gameInit();
 
-
-
-
-
 diceRoll.addEventListener("click", function(){
 	dice = Math.floor(Math.random()*6) + 1;// random number for dice roll
 	//change the value of player's round score
-	player1CurrentScore.innerHTML = dice;
-	if(player1CurrentScore.innerHTML === "1"){//if you use ===, use "1", else if you use ==, use 1
-		player1Panel.classList.remove("active");
-		player2Panel.classList.add("active");
+	if (player1Active === true){
+			player1CurrentScore.innerHTML = dice;
+			if(player1CurrentScore.innerHTML === "1"){//if you use ===, use "1", else if you use ==, use 1
+			player1Panel.classList.remove("active");
+			player2Panel.classList.add("active");
+			player1Active = false;
+		}
 	}
+	else{
+		player2CurrentScore.innerHTML = dice;
+		if(player2CurrentScore.innerHTML === "1"){//if you use ===, use "1", else if you use ==, use 1
+		player2Panel.classList.remove("active");
+		player1Panel.classList.add("active");
+		player1Active = true;
+		}
+	}
+	
+
 	diceImg.style.display = "block";
 	diceImg.src = "dice-" + dice + ".jpg";
 })
