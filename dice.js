@@ -1,5 +1,5 @@
 //declare our variables
-var scores, roundScore, activePlayerArr, activePlayer,holdBtn, dice,player1Panel,player2Panel, player1CurrentScore,player2CurrentScore, player1GlobalScore,playe21GlobalScore, diceRoll, diceImg;
+var scores, maxScore, roundScore, globalScore, globalScore1,globalScore2, activePlayerArr, activePlayer,holdBtn, dice,player1Panel,player2Panel, player1CurrentScore,player2CurrentScore, player1GlobalScore,playe21GlobalScore, diceRoll, diceImg;
 diceImg = document.querySelector(".dice");
 scores = [0,0];//global score array  for both players
 roundScore = 0;// round score for each player
@@ -15,9 +15,10 @@ holdBtn = document.querySelector(".btn-hold");
 var player1Name = document.querySelector(".name-0");
 var player2Name = document.querySelector(".name-1");
 var player1Active;
-var globalScore1 = 0;
-var globalScore2 = 0;
-var maxScore = 100;
+globalScore = {globalScore1: 0, globalScore2: 0};
+globalScore1 = 0
+globalScore2 = 0;
+maxScore = 100;
 
 function active(num){
 	activePlayer = num;
@@ -41,18 +42,30 @@ function gameInit(){
 	activePlayer = 0;
 }
 
+function hold(num){
+	activePlayer = num;
+		if(activePlayer === 0){
+			globalScore1 += parseInt(document.querySelector("#current-" + activePlayer).innerHTML);
+			document.querySelector("#score-" + activePlayer).innerHTML = globalScore1;
+		}
+		else{
+			globalScore2 += parseInt(document.querySelector("#current-" + activePlayer).innerHTML);
+			document.querySelector("#score-" + activePlayer).innerHTML = globalScore2;
+		}
+	document.querySelector("#current-" + activePlayer).innerHTML = "0";
+}
+
 gameInit();
 
 diceRoll.addEventListener("click", function(){
 	dice = Math.floor(Math.random()*6) + 1;// random number for dice roll
-
 	if (player1Active === true){
 		active(0);
 	}
 	else{
 		active(1);
 	}
-	
+
 	diceImg.style.display = "block";
 	diceImg.src = "dice-" + dice + ".jpg";
 })
@@ -69,21 +82,11 @@ function max(score1,score2){
 holdBtn.addEventListener("click", function(){
 
 	if(player1Active === true){
-		globalScore1 += parseInt(player1CurrentScore.innerHTML);
-		player1GlobalScore.innerHTML = globalScore1;
-		player1CurrentScore.innerHTML = "0";
-		player1Active === false;
-
+		hold(0);
 	}
-	
 	else{
-		globalScore2 += parseInt(player2CurrentScore.innerHTML);
-		player2GlobalScore.innerHTML = globalScore2;
-		player2CurrentScore.innerHTML = "0";
-		player1Active === true;	
+		hold(1);
 	}
-	//console.log(globalScore1,globalScore2)
-	max(globalScore1,globalScore2);
 })
 
 // function winner(win){
