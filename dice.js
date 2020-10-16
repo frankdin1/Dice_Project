@@ -1,74 +1,98 @@
 //declare our variables
-var scores, roundScore, activePlayer,holdBtn, dice,player1Panel,player2Panel, player1CurrentScore,player2CurrentScore, player1GlobalScore,playe21GlobalScore, diceRoll, diceImg;
+var scores, roundScore, activePlayerArr, activePlayer,holdBtn, dice,player1Panel,player2Panel, player1CurrentScore,player2CurrentScore, player1GlobalScore,playe21GlobalScore, diceRoll, diceImg;
 diceImg = document.querySelector(".dice");
 scores = [0,0];//global score array  for both players
 roundScore = 0;// round score for each player
-activePlayer = [0,1];
-player1CurrentScore = document.querySelector("#current-" + activePlayer[0]);
-player2CurrentScore = document.querySelector("#current-" + activePlayer[1]);
-player1GlobalScore = document.querySelector("#score-" + activePlayer[0]);
-player2GlobalScore = document.querySelector("#score-" + activePlayer[1]);
+activePlayerArr = [0,1]
+player1CurrentScore = document.querySelector("#current-" + activePlayerArr[0]);
+player2CurrentScore = document.querySelector("#current-" + activePlayerArr[1]);
+player1GlobalScore = document.querySelector("#score-" + activePlayerArr[0]);
+player2GlobalScore = document.querySelector("#score-" + activePlayerArr[1]);
 player1Panel = document.querySelector(".player-0-panel");
 player2Panel = document.querySelector(".player-1-panel");
 diceRoll = document.querySelector(".btn-roll");
 holdBtn = document.querySelector(".btn-hold");
+var player1Name = document.querySelector(".name-0");
+var player2Name = document.querySelector(".name-1");
 var player1Active;
 var globalScore1 = 0;
 var globalScore2 = 0;
+var maxScore = 100;
+
+function active(num){
+	activePlayer = num;
+	document.querySelector("#current-" + activePlayer).innerHTML = dice;
+	if (dice === 1){
+		player1Active = !player1Active;
+		console.log(player1Active);
+		player1Panel.classList.toggle("active");
+	 	player2Panel.classList.toggle("active");
+	 	document.querySelector("#current-" + activePlayer).innerHTML = "0";
+	}
+}
 
 function gameInit(){
 	diceImg.style.display = "none";
 	player1CurrentScore.innerHTML = 0;
-	console.log(typeof(player1CurrentScore.innerHTML))
 	player2CurrentScore.innerHTML = 0;
 	player1GlobalScore.innerHTML = 0;
 	player2GlobalScore.innerHTML = 0;
 	player1Active = true;
+	activePlayer = 0;
 }
 
 gameInit();
 
 diceRoll.addEventListener("click", function(){
 	dice = Math.floor(Math.random()*6) + 1;// random number for dice roll
-	//change the value of player's round score
+
 	if (player1Active === true){
-			player1CurrentScore.innerHTML = dice;
-			if(dice === 1){//if you use ===, use "1", else if you use ==, use 1
-			player1Active = false;
-			player1Panel.classList.remove("active");
-			player2Panel.classList.add("active");
-			player1CurrentScore.innerHTML = "0";
-		}
+		active(0);
 	}
 	else{
-		player2CurrentScore.innerHTML = dice;
-		if(dice === 1){//if you use ===, use "1", else if you use ==, use 1
-		player2Panel.classList.remove("active");
-		player1Panel.classList.add("active");
-		player1Active = true;
-		player2CurrentScore.innerHTML = "0";
-		}
+		active(1);
 	}
 	
-
 	diceImg.style.display = "block";
 	diceImg.src = "dice-" + dice + ".jpg";
 })
 
-holdBtn.addEventListener("click", function(){
-	if(player1Active === true){
+function max(score1,score2){
+	if(score1 >= maxScore){
+		player1Name.classList.add("winner");
+	}
+	else if(score2 >= maxScore){
+		player2Name.classList.add("winner")
+	}
+}
 
+holdBtn.addEventListener("click", function(){
+
+	if(player1Active === true){
 		globalScore1 += parseInt(player1CurrentScore.innerHTML);
 		player1GlobalScore.innerHTML = globalScore1;
 		player1CurrentScore.innerHTML = "0";
 		player1Active === false;
-	}
-	else{
 
+	}
+	
+	else{
 		globalScore2 += parseInt(player2CurrentScore.innerHTML);
 		player2GlobalScore.innerHTML = globalScore2;
 		player2CurrentScore.innerHTML = "0";
 		player1Active === true;	
 	}
-
+	//console.log(globalScore1,globalScore2)
+	max(globalScore1,globalScore2);
 })
+
+// function winner(win){
+// 	if (win = ){
+// 		alert("winner")
+// 		player1Name.classList.add("winner")
+// 	}
+// 	else if (globalScore2 >= 20){
+// 		alert("winner")
+// 		player2Name.classList.add("winner")
+// 	}
+// }
