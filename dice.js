@@ -19,21 +19,20 @@ endGame = false;
 gameInit();
 
 function active(num){
-	activePlayer = num;
-	document.querySelector("#current-" + activePlayer).innerHTML = dice;
-	switchPlayer();
-	
-	
+		activePlayer = num;
+		document.querySelector("#current-" + activePlayer).innerHTML = dice;
+		switchPlayer();
 }
 
 function switchPlayer(){
-	if (dice === 1 && endGame === false){
-		player1Active = !player1Active;
-		console.log(player1Active);
-		player1Panel.classList.toggle("active");
-	 	player2Panel.classList.toggle("active");
-	 	document.querySelector("#current-" + activePlayer).innerHTML = "0";
+	if (dice === 1){
+	player1Active = !player1Active;
+	console.log(player1Active);
+	player1Panel.classList.toggle("active");
+	player2Panel.classList.toggle("active");
+	document.querySelector("#current-" + activePlayer).innerHTML = "0";
 	}
+	
 }
 
 function gameInit(){
@@ -48,6 +47,7 @@ function gameInit(){
 	document.querySelector(".player-0-panel").classList.remove("winner");
 	document.querySelector(".player-1-panel").classList.remove("winner");
 	document.querySelector(".player-0-panel").classList.add("active");
+	endGame = false;
 }
 
 function hold(num){
@@ -62,9 +62,7 @@ function hold(num){
 
 
 
-reset.addEventListener("click", function(){
-	gameInit();
-});
+reset.addEventListener("click", gameInit);
 
 diceRoll.addEventListener("click", function(){
 	if (endGame === false){
@@ -75,31 +73,35 @@ diceRoll.addEventListener("click", function(){
 		else{
 			active(1);
 		}
-	}
-	
 	diceImg.style.display = "block";
 	diceImg.src = "dice-" + dice + ".jpg";
+	}
 })
 
 function winner(num){
 	activePlayer = num;
 	if(globalScore[num] >= maxScore){
-	endGame === true;
+	endGame = true;
+	console.log(endGame);
 	document.querySelector("#name" + "-" + activePlayer).innerHTML = "WINNER";
 	document.querySelector(".player" + "-" + activePlayer + "-panel").classList.add("winner");
 	document.querySelector(".player" + "-" + activePlayer + "-panel").classList.remove("active");
 	diceImg.style.display = "none";
 	}
+	return endGame;
 }
 
 holdBtn.addEventListener("click", function(){
-
-	if(player1Active === true){
+	if(endGame === false){
+		if(player1Active === true){
 		hold(0);
-		winner(0);
+		endGame = winner(0);
+		}
+		else{
+			hold(1);
+			endGame = winner(1)
+		}
 	}
-	else{
-		hold(1);
-		winner(1)
-	}
+	// console.log(endGame)
+	
 })
