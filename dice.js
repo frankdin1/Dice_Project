@@ -1,6 +1,6 @@
 //declare our variables
 var winningScore, maxScore, globalScore, activePlayerArr, holdBtn, reset, 
-player1Panel, player2Panel, player1CurrentScore, player2CurrentScore, 
+player1Panel, player2Panel, player1CurrentScore, player2CurrentScore, endGame,
 player1GlobalScore, playe21GlobalScore, diceRoll, diceImg, player1Active;
 
 diceImg = document.querySelector(".dice");
@@ -15,6 +15,7 @@ holdBtn = document.querySelector(".btn-hold");
 globalScore = [0,0];
 maxScore = 10;
 reset = document.querySelector(".btn-new");
+endGame = false;
 gameInit();
 
 function active(num){
@@ -26,7 +27,7 @@ function active(num){
 }
 
 function switchPlayer(){
-	if (dice === 1){
+	if (dice === 1 && endGame === false){
 		player1Active = !player1Active;
 		console.log(player1Active);
 		player1Panel.classList.toggle("active");
@@ -42,13 +43,21 @@ function gameInit(){
 	player1GlobalScore.innerHTML = 0;
 	player2GlobalScore.innerHTML = 0;
 	player1Active = true;
+	document.querySelector("#name-0").innerHTML = "PLAYER 1";
+	document.querySelector("#name-1").innerHTML = "PLAYER 2";
+	document.querySelector(".player-0-panel").classList.remove("winner");
+	document.querySelector(".player-1-panel").classList.remove("winner");
+	document.querySelector(".player-0-panel").classList.add("active");
 }
 
 function hold(num){
-	activePlayer = num;
-	globalScore[num] += parseInt(document.querySelector("#current-" + activePlayer).innerHTML);
-	document.querySelector("#score-" + activePlayer).innerHTML = globalScore[num];
-	document.querySelector("#current-" + activePlayer).innerHTML = "0";
+	if (endGame === false){
+		activePlayer = num;
+		globalScore[num] += parseInt(document.querySelector("#current-" + activePlayer).innerHTML);
+		document.querySelector("#score-" + activePlayer).innerHTML = globalScore[num];
+		document.querySelector("#current-" + activePlayer).innerHTML = "0";
+	}
+	
 }
 
 
@@ -58,13 +67,16 @@ reset.addEventListener("click", function(){
 });
 
 diceRoll.addEventListener("click", function(){
-	dice = Math.floor(Math.random()*6) + 1;// random number for dice roll
-	if (player1Active === true){
-		active(0);
+	if (endGame === false){
+		dice = Math.floor(Math.random()*6) + 1;// random number for dice roll
+		if (player1Active === true){
+			active(0);
+		}
+		else{
+			active(1);
+		}
 	}
-	else{
-		active(1);
-	}
+	
 	diceImg.style.display = "block";
 	diceImg.src = "dice-" + dice + ".jpg";
 })
@@ -72,7 +84,7 @@ diceRoll.addEventListener("click", function(){
 function winner(num){
 	activePlayer = num;
 	if(globalScore[num] >= maxScore){
-	winningScore = globalScore[num]; 
+	endGame === true;
 	document.querySelector("#name" + "-" + activePlayer).innerHTML = "WINNER";
 	document.querySelector(".player" + "-" + activePlayer + "-panel").classList.add("winner");
 	document.querySelector(".player" + "-" + activePlayer + "-panel").classList.remove("active");
