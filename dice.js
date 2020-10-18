@@ -1,7 +1,7 @@
 //declare our variables
-var winningScore, maxScore, globalScore, activePlayerArr, holdBtn, reset, 
+var winningScore, maxScore, globalScore, activePlayerArr, holdBtn, reset, maxScoreInput, 
 player1Panel, player2Panel, player1CurrentScore, player2CurrentScore, endGame,
-player1GlobalScore, playe21GlobalScore, diceRoll, diceImg, player1Active;
+player1GlobalScore, playe21GlobalScore, diceRoll, diceImg, player1Active, maxScoreDisplay;
 
 diceImg = document.querySelector(".dice");
 player1CurrentScore = document.querySelector("#current-0");
@@ -12,9 +12,11 @@ player1Panel = document.querySelector(".player-0-panel");
 player2Panel = document.querySelector(".player-1-panel");
 diceRoll = document.querySelector(".btn-roll");
 holdBtn = document.querySelector(".btn-hold");
-globalScore = [0,0];
-maxScore = 10;
+maxScoreBtn = document.querySelector("#maxScore");
 reset = document.querySelector(".btn-new");
+maxScoreDisplay = document.querySelector("#maxScoreDisplay");
+globalScore = [0,0];
+maxScore;
 endGame = false;
 gameInit();
 
@@ -48,6 +50,7 @@ function gameInit(){
 	document.querySelector(".player-1-panel").classList.remove("winner");
 	document.querySelector(".player-0-panel").classList.add("active");
 	endGame = false;
+	globalScore = [0,0];
 }
 
 function hold(num){
@@ -60,9 +63,12 @@ function hold(num){
 	
 }
 
-
-
 reset.addEventListener("click", gameInit);
+
+maxScoreBtn.addEventListener("click", function(){
+	maxScore = Number(prompt("Enter your desired max score (Default is 100)"))
+	maxScoreDisplay.innerHTML = maxScore;
+})
 
 diceRoll.addEventListener("click", function(){
 	if (endGame === false){
